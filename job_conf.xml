@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!-- A sample job config that explicitly configures job running the way it is configured by default (if there is no explicit config). -->
+<job_conf>
+    <plugins>
+        <plugin id="local" type="runner" load="galaxy.jobs.runners.local:LocalJobRunner" workers="4"/>
+	<plugin id="cli" type="runner" load="galaxy.jobs.runners.cli:ShellJobRunner" />
+    </plugins>
+    <handlers>
+        <handler id="main"/>
+    </handlers>
+    <destinations default="local">
+      <destination id="local" runner="local"/>
+      <destination id="remote-ssh" runner="cli">
+        <param id="shell_plugin">SecureShell</param>
+        <param id="job_plugin">Torque</param>
+        <param id="shell_username">tg455546</param>
+        <!-- <param id="shell_hostname">dxccom01.psc.edu</param> -->
+	<param id="shell_hostname">greenfield.psc.edu</param>
+	<param id="job_-q">batch</param>
+        <param id="job_Resource_List">walltime=48:00:00,nodes=1:ppn=15</param>
+        <param id="-M">blood@psc.edu</param>
+        <param id="-m">ae</param>
+	<env exec="module load samtools/0.1.19-all" /> 
+        <param id="remote_metadata">true</param>
+        <env file="/home/tg455546/galaxy/.venv/bin/activate" />
+      </destination>
+    </destinations>
+    <tools>
+        <tool id="qstat" destination="remote-ssh"/>
+        <tool id="trinityrnaseq" destination="remote-ssh"/>
+        <tool id="align_and_estimate_abundance" destination="remote-ssh"/>
+        <tool id="abundance_estimates_to_matrix" destination="remote-ssh"/>
+        <tool id="run_DE_analysis" destination="remote-ssh"/>
+        <tool id="analyze_diff_expr" destination="remote-ssh"/>
+        <tool id="transcripts_to_best_scoring_ORFs" destination="remote-ssh"/>
+        <tool id="trinotate_blast_homologies" destination="remote-ssh"/>
+        <tool id="trinotate_HMMER_domains" destination="remote-ssh"/>
+        <tool id="trinotate_signalP_signal_peptides" destination="remote-ssh"/>
+        <tool id="trinotate_tmHMM_transmembrane_regions" destination="remote-ssh"/>
+        <tool id="Trinotate_genes_to_trans_map" destination="remote-ssh"/>
+        <tool id="trinotate_rnammer" destination="remote-ssh"/>
+        <tool id="NewTrinotate_load_sqlite_database" destination="remote-ssh"/>
+        <tool id="NewTrinotate_create_sqlite_database" destination="remote-ssh"/>
+        <tool id="trinotate_annotation_report" destination="remote-ssh"/>
+        <tool id="FetchDXC" destination="remote-ssh"/>
+    </tools>
+</job_conf>
